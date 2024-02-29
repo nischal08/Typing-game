@@ -49,7 +49,7 @@ def update(current_time, limit):
         timer_text.configure(text="Time: " + print_time)
         timer = window.after(1000, update, current_time, limit)
     else:
-        wpm = str((count / 5) / (1/12))
+        wpm = str((count / 5) / (limit/60))
         wpm_text.configure(text="WPM: " + wpm)
         window.after_cancel(timer)
         entry.config(state=DISABLED)
