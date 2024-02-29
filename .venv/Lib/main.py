@@ -49,7 +49,7 @@ def update(current_time, limit):
         timer_text.configure(text="Time: " + print_time)
         timer = window.after(1000, update, current_time, limit)
     else:
-        wpm = str((count / 5) / 0.5)
+        wpm = str((count / 5) / (1/12))
         wpm_text.configure(text="WPM: " + wpm)
         window.after_cancel(timer)
         entry.config(state=DISABLED)
@@ -59,7 +59,9 @@ def update(current_time, limit):
 def restart():
     global timer
     global count
+    global is_init
     count = 0
+    is_init=True
     entry.config(state="normal")
     entry.delete(0, 'end')
     window.bind("<Key>", handle)
@@ -72,9 +74,10 @@ def restart():
         window.after_cancel(timer)
         timer = None
     # update
-    timer = window.after(1000, update, current_time, limit)
+    # timer = window.after(1000, update, current_time, limit)
     # timer_text.configure(text='Time:?')
     wpm = "?"
+    wpm_text.configure(text="WPM: " + wpm)
 
 
 window = Tk(className="Typing Game", )
