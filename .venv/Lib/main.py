@@ -1,6 +1,6 @@
 from tkinter import *
 
-SHIFT_KEYS = {"Shift_L", "Shift_R"}
+CAPITAL_KEYS = {"Shift_L", "Shift_R", "Caps_Lock"}
 limit = 5
 current_time = 0
 print_time = "0"
@@ -19,8 +19,8 @@ def handle(event):
     if is_init:
         timer = window.after(1000, update, current_time, limit)
         is_init = False
-    if event.keysym in SHIFT_KEYS:
-        is_capital = True
+    if event.keysym in CAPITAL_KEYS:
+        # is_capital = True
         return None
     key_pressed = event.keysym.upper() if is_capital else event.keysym
     print(key_pressed)
@@ -38,7 +38,7 @@ def handle(event):
     else:
         text.tag_add("correct", "1." + f"{count}", )
         count += 1
-    is_capital = False
+    # is_capital = False
 
 
 def update(current_time, limit):
@@ -104,3 +104,4 @@ window.mainloop()
 
 # TODO: Calculate accuracy rate and show in UI
 # TODO: Save highscore
+# TODO: Web scrape of typing game website to show random new text
