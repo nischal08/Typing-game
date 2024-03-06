@@ -1,7 +1,8 @@
 from tkinter import *
+import re
 
 CAPITAL_KEYS = {"Shift_L", "Shift_R", "Caps_Lock"}
-limit = 2 #Is in seconds
+limit = 15 #Is in seconds
 current_time = 0
 count = 0
 is_capital = False
@@ -38,6 +39,18 @@ def handle(event):
         count += 1
     # is_capital = False
 
+# Function to count characters with a specific tag
+def count_tagged_chars(tag_name):
+    tag_ranges = text.tag_ranges(tag_name)
+    char_count = 0
+    for start, end in zip(tag_ranges[::2], tag_ranges[1::2]):
+        char_count += len(text.get(start, end))
+    return char_count
+
+def count_total_chars():
+    text = entry.get()
+    char_count = len(text)
+    return char_count
 
 def update(current_time, limit):
     current_time += 1
@@ -46,6 +59,9 @@ def update(current_time, limit):
         timer_text.configure(text=current_time)
         timer = window.after(1000, update, current_time, limit)
     else:
+
+        accuracy= f"{int((count_tagged_chars('correct') / count_total_chars()) * 100)}%"
+        accuracy_text.configure(text=accuracy)
         wpm_text.configure(text=int((count / 5) / (limit/60)))
         # accuracy_text.configure(text=int((/count)*100))
         # timer_text.configure(text="Times Up!",fg="white",bg="red")
@@ -53,7 +69,6 @@ def update(current_time, limit):
         window.after_cancel(timer)
         entry.config(state=DISABLED)
         window.unbind(handle)
-
 
 def restart():
     global timer
@@ -76,6 +91,7 @@ def restart():
     # timer = window.after(1000, update, current_time, limit)
     # timer_text.configure(text='Time:?')
     wpm_text.configure(text="?")
+    accuracy_text.configure(text="?")
 
 
 window = Tk(className="Typing Game", )
@@ -91,7 +107,7 @@ timer_text = Label(frame, width=3, text="0", bg="yellow")
 wpm_label = Label(frame,  text="WPM:", )
 wpm_text = Label(frame,width=3, text="?", bg="blue", fg="white")
 accuracy_label = Label(frame,  text="Accuracy:", )
-accuracy_text = Label(frame,width=3, text="?", bg="green", fg="white")
+accuracy_text = Label(frame,width=4, text="?", bg="green", fg="white")
 restart_btn = Button(bottomframe,text="Restart", command=restart)
 text = Text(bottomframe, font=('Arial', 20), height=4)
 text.insert(INSERT, script)
@@ -113,7 +129,7 @@ restart_btn.pack(pady=10)
 window.bind("<Key>", handle)
 window.mainloop()
 
-# TODO: Calculate total correct count
-# TODO: Calculate accuracy rate and show in UI
+# TODO: Calculate total correct count (Done)
+# TODO: Calculate accuracy rate and show in UI (Done)
 # TODO: Save highscore
 # TODO: Web scrape of typing game website to show random new text
